@@ -1,5 +1,5 @@
 import csv
-from sfloader.reports.base import BaseReport
+from sfloader.base_report import BaseReport
 
 
 class FileReport(BaseReport):
