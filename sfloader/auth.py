@@ -2,7 +2,10 @@ import requests
 from sfloader.exceptions import AuthError
 
 
-class Credentials:
+class SFAuthPassword:
+    access_token = None
+    instance_url = None
+
     def __init__(
         self,
         grant_type,
@@ -13,17 +16,15 @@ class Credentials:
         api_version,
         host,
     ):
+        self.api_version = api_version
         self.grant_type = grant_type
         self.client_id = client_id
         self.client_secret = client_secret
         self.username = username
         self.password = password
-        self.api_version = api_version
         self.host = host
-        self.instance_url = None
-        self.access_token = None
 
-    def retrieve(self):
+    def connect(self):
         response = requests.post(
             url=self.oauth_url,
             data={
@@ -42,6 +43,7 @@ class Credentials:
 
         self.access_token = data["access_token"]
         self.instance_url = data["instance_url"]
+        return self
 
     @property
     def oauth_url(self):

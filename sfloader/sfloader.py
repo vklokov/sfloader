@@ -1,31 +1,11 @@
 from sfloader.io_report import IOReport
-from sfloader.credentials import Credentials
 from sfloader.job import Job
 from sfloader.logger import Logger
 
 
 class SFLoader:
-    def __init__(
-        self,
-        grant_type,
-        client_id,
-        client_secret,
-        username,
-        password,
-        api_version,
-        host,
-    ):
-        self.credentials = Credentials(
-            grant_type=grant_type,
-            client_id=client_id,
-            client_secret=client_secret,
-            username=username,
-            password=password,
-            api_version=api_version,
-            host=host,
-        )
-
-        self.credentials.retrieve()
+    def __init__(self, auth_client):
+        self.auth_client = auth_client.connect()
 
     def upload(
         self,
@@ -38,9 +18,7 @@ class SFLoader:
         silent=False,
     ):
         logger = Logger(silent=silent)
-        job = Job(
-            credentials=self.credentials, report_builder=report_builder, logger=logger
-        )
+        job = Job(client=self.auth_client, report_builder=report_builder, logger=logger)
         job.create(
             object_type=object_type,
             operation=operation,

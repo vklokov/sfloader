@@ -10,17 +10,17 @@ class Job:
     object_type = None
     external_key = None
 
-    def __init__(self, credentials, report_builder, logger):
+    def __init__(self, auth_client, report_builder, logger):
         self.logger = logger
         self.report_builder = report_builder
-        self.credentials = credentials
-        self.jobs_url = f"{self.credentials.instance_url}/services/data/v{self.credentials.api_version}/jobs/ingest"
+        self.auth_client = auth_client
+        self.jobs_url = f"{self.auth_client.instance_url}/services/data/v{self.auth_client.api_version}/jobs/ingest"
 
     def create(self, object_type, operation, external_key=None, line_ending="LF"):
         response = requests.post(
             url=self.jobs_url,
             headers={
-                **self.credentials.auth_header,
+                **self.auth_client.auth_header,
                 "Content-Type": "application/json",
                 "X-PrettyPrint": "1",
             },
@@ -51,10 +51,10 @@ class Job:
         self.logger.log(f"Uploading file {name}")
 
         response = requests.put(
-            url=f"{self.credentials.instance_url}/{self.content_url}",
+            url=f"{self.auth_client.instance_url}/{self.content_url}",
             data=file.read().encode("utf-8"),
             headers={
-                **self.credentials.auth_header,
+                **self.auth_client.auth_header,
                 "Content-Type": "text/csv",
             },
         )
@@ -66,7 +66,7 @@ class Job:
         response = requests.patch(
             url=f"{self.jobs_url}/{self.job_id}",
             headers={
-                **self.credentials.auth_header,
+                **self.auth_client.auth_header,
                 "Content-Type": "application/json",
                 "X-PrettyPrint": "1",
             },
@@ -82,7 +82,7 @@ class Job:
         response = requests.get(
             url=f"{self.jobs_url}/{self.job_id}",
             headers={
-                **self.credentials.auth_header,
+                **self.auth_client.auth_header,
                 "Content-Type": "application/json",
                 "X-PrettyPrint": "1",
             },
@@ -112,7 +112,7 @@ class Job:
         response = requests.get(
             url=f"{self.jobs_url}/{self.job_id}/{key}",
             headers={
-                **self.credentials.auth_header,
+                **self.auth_client.auth_header,
                 "Accept": "text/csv",
             },
         )

@@ -11,9 +11,9 @@ pip install git+https://github.com/vklokov/sfloader@master
 Initialize loader. Currently implemented only password auth method.
 
 ```python
-from sfloader import SFLoader
+from sfloader import SFAuthPassword, SFLoader
 
-loader = SFLoader(
+client = SFAuthPassword(
     grant_type="password",
     client_id="CLIENT ID",
     client_secret="CLIENT SECRET",
@@ -22,6 +22,8 @@ loader = SFLoader(
     api_version="55.0",
     host="your-company-name.my.salesforce.com",
 )
+
+loader = SFLoader(auth_client=client)
 ```
 
 Provider report CSV & desired report builder (io report by default selected)
@@ -30,7 +32,7 @@ Provider report CSV & desired report builder (io report by default selected)
 ...
 from sfloader import FileReport
 
-loader=SFLoader(...)
+...
 
 # Also StringIO (in memory) files are supported
 with open("path/to/csv-file.csv", "r") as csvfile:
