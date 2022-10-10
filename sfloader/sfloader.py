@@ -2,7 +2,7 @@ from sfloader.credentials import Credentials
 from sfloader.job import Job
 
 
-class SForce:
+class SFLoader:
     def __init__(
         self,
         grant_type,
