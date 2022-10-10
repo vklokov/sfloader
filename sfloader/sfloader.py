@@ -18,7 +18,9 @@ class SFLoader:
         silent=False,
     ):
         logger = Logger(silent=silent)
-        job = Job(client=self.auth_client, report_builder=report_builder, logger=logger)
+        job = Job(
+            auth_client=self.auth_client, report_builder=report_builder, logger=logger
+        )
         job.create(
             object_type=object_type,
             operation=operation,
