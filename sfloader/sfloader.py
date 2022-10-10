@@ -1,4 +1,4 @@
-from sfloader.sfloader.io_report import IOReport
+from sfloader.io_report import IOReport
 from sfloader.credentials import Credentials
 from sfloader.job import Job
 
