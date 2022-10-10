@@ -38,7 +38,7 @@ class Job:
         result = response.json()
 
         self.job_id = result["id"]
-        self.content_url = result["content_url"]
+        self.content_url = result["contentUrl"]
 
     def upload_file(self, file):
         response = requests.put(
