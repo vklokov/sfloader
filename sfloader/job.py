@@ -94,7 +94,7 @@ class Job:
         result = response.json()
 
         if result["state"] == "Failed":
-            raise SalesforceError(f"Job processing failed: {result.content}")
+            raise SalesforceError(f"Job processing failed: {result}")
 
         if result["state"] == "JobComplete":
             self.logger.log(
