@@ -8,5 +8,5 @@ class FileReport(BaseReport):
 
     def call(self, status, rows):
         with open(f"{self.output}.{status}.csv", "w", newline="") as csvfile:
-            writer = csv.writer(csvfile, delimeter=",")
+            writer = csv.writer(csvfile, delimiter=",")
             writer.writerows(rows)
