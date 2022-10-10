@@ -1,10 +1,17 @@
 import requests
-from sfloader.exceptions import AuthError, ExecutionError
+from sfloader.exceptions import AuthError
 
 
 class Credentials:
-    def __init__(self, grant_type, client_id, client_secret,
-                 username, password, api_version, host,
+    def __init__(
+        self,
+        grant_type,
+        client_id,
+        client_secret,
+        username,
+        password,
+        api_version,
+        host,
     ):
         self.grant_type = grant_type
         self.client_id = client_id
@@ -25,7 +32,7 @@ class Credentials:
                 "client_secret": self.client_secret,
                 "username": self.username,
                 "password": self.password,
-            }
+            },
         )
 
         if response.status_code != 200:

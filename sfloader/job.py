@@ -3,6 +3,7 @@ import time
 import requests
 from sfloader.exceptions import SalesforceError
 
+
 class Job:
     job_id = None
     content_url = None
@@ -28,7 +29,7 @@ class Job:
                 "operation": operation,
                 "lineEnding": line_ending,
                 "externalIdFieldName": external_key,
-            }
+            },
         )
 
         if response.status_code > 201:
@@ -46,7 +47,7 @@ class Job:
             headers={
                 **self.credentials.auth_header,
                 "Content-Type": "text/csv",
-            }
+            },
         )
 
         if response.status_code > 201:
@@ -60,7 +61,7 @@ class Job:
                 "Content-Type": "application/json",
                 "X-PrettyPrint": "1",
             },
-            json={"state": "UploadComplete"}
+            json={"state": "UploadComplete"},
         )
 
         if response.status_code > 201:
@@ -73,7 +74,7 @@ class Job:
                 **self.credentials.auth_header,
                 "Content-Type": "application/json",
                 "X-PrettyPrint": "1",
-            }
+            },
         )
 
         if response.status_code != 200:
@@ -98,11 +99,13 @@ class Job:
             headers={
                 **self.credentials.auth_header,
                 "Accept": "text/csv",
-            }
+            },
         )
 
         if response.status_code > 299:
             raise SalesforceError(f"Download report error: {response.content}")
 
-        csv_rows = csv.reader(response.content.decode("utf-8").splitlines(), delimiter=",")        
+        csv_rows = csv.reader(
+            response.content.decode("utf-8").splitlines(), delimiter=","
+        )
         self.report_builder.call(status, list(csv_rows))

@@ -1,5 +1,6 @@
 from sfloader.reports.base import BaseReport
 
+
 class IOReport(BaseReport):
     def call(self, status, rows):
         print("\n\n")
