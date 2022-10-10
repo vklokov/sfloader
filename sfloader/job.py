@@ -10,7 +10,8 @@ class Job:
     object_type = None
     external_key = None
 
-    def __init__(self, credentials, report_builder):
+    def __init__(self, credentials, report_builder, logger):
+        self.logger = logger
         self.report_builder = report_builder
         self.credentials = credentials
         self.jobs_url = f"{self.credentials.instance_url}/services/data/v{self.credentials.api_version}/jobs/ingest"
@@ -39,10 +40,13 @@ class Job:
 
         self.job_id = result["id"]
         self.content_url = result["contentUrl"]
+        self.logger.log(f"Job ID {self.job_id} created")
 
     def upload_file(self, file):
+        self.logger.log("Uploading file...")
+
         response = requests.put(
-            url=f"{self.jobs_url}/#{self.job_id}/batches",
+            url=f"{self.credentials.instance_url}/{self.content_url}",
             data=file.read().encode("utf-8"),
             headers={
                 **self.credentials.auth_header,
@@ -54,8 +58,8 @@ class Job:
             raise SalesforceError(f"Error file upload: {response.content}")
 
     def finalize(self):
-        response = requests.post(
-            url=f"{self.jobs_url}/#{self.job_id}",
+        response = requests.patch(
+            url=f"{self.jobs_url}/{self.job_id}",
             headers={
                 **self.credentials.auth_header,
                 "Content-Type": "application/json",
@@ -65,9 +69,11 @@ class Job:
         )
 
         if response.status_code > 201:
-            raise SalesforceError(f"Error retrieve access token: {response.content}")
+            raise SalesforceError(f"Error finalize job: {response.content}")
 
     def check_status(self):
+        self.logger.log("Check job status")
+
         response = requests.get(
             url=f"{self.jobs_url}/{self.job_id}",
             headers={
@@ -86,8 +92,12 @@ class Job:
             raise SalesforceError("Job processing failed")
 
         if result["state"] == "JobComplete":
+            self.logger.log(
+                "\nJop complete! Report in progress.",
+            )
             self.handle_report("success")
             self.handle_report("failure")
+            return None
 
         time.sleep(3)
         self.check_status()
