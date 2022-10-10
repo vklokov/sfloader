@@ -43,7 +43,12 @@ class Job:
         self.logger.log(f"Job ID {self.job_id} created")
 
     def upload_file(self, file):
-        self.logger.log("Uploading file...")
+        try:
+            name = file.name
+        except AttributeError:
+            name = "..."
+
+        self.logger.log(f"Uploading file {name}")
 
         response = requests.put(
             url=f"{self.credentials.instance_url}/{self.content_url}",
